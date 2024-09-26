@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hospital reginonal JUAN PABLO P Imágenes Médicas</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f4f8;
+            color: #333;
+        }
+        .container {
+            width: 90%;
+            margin: auto;
+            overflow: hidden;
+            padding: 20px;
+        }
+        header {
+            background: #005EB8;
+            color: white;
+            padding-top: 30px;
+            min-height: 70px;
+            border-bottom: #00A9CE 3px solid;
+        }
+        header h1 {
+            margin: 0;
+            text-align: center;
+        }
+        #login-form, #search-form {
+            background: white;
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        #content {
+            display: none;
+        }
+        img {
+            max-width: 100%;
+            height: auto;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        th, td {
+            padding: 12px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+        th {
+            background-color: #005EB8;
+            color: white;
+            cursor: pointer;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        .btn {
+            display: inline-block;
+            background: #00A9CE;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+        .btn:hover {
+            background: #0082A3;
+        }
+        input[type="text"], input[type="date"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+        #search-results {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Sistema de Gestión de Imágenes Médicas Juan pablo pina</h1>
+    </header>
+
+    <div class="container">
+        <div id="login-form">
+            <h2>Acceso al Sistema</h2>
+            <form id="login">
+                <label for="user-id">ID de Usuario:</label>
+                <input type="text" id="user-id" required>
+                <button type="submit" class="btn">Acceder</button>
+            </form>
+        </div>
+
+        <div id="content">
+            <h2>Bienvenido al Sistema de Gestión de Imágenes Médicas</h2>
+            <img src="imag.1.jpg" alt="Gestión de Imágenes Médicas">
+            
+            <div id="search-form">
+                <h3>Búsqueda de Imágenes Específicas</h3>
+                <label for="image-type">Tipo de Imagen:</label>
+                <select id="image-type">
+                    <option value="">Todos</option>
+                    <option value="Resonancia Magnética">Resonancia Magnética</option>
+                    <option value="Radiografía">Radiografía</option>
+                    <option value="Tomografía Computarizada">Tomografía Computarizada</option>
+                    <option value="Ecografía">Ecografía</option>
+                    <option value="Mamografía">Mamografía</option>
+                </select>
+                <label for="start-date">Fecha Inicio:</label>
+                <input type="date" id="start-date">
+                <label for="end-date">Fecha Fin:</label>
+                <input type="date" id="end-date">
+                <button id="search-btn" class="btn">Buscar</button>
+            </div>
+
+            <div id="search-results"></div>
+
+            <h3>Registro de Imágenes Médicas</h3>
+            <table id="patient-table">
+                <thead>
+                    <tr>
+                        <th onclick="sortTable(0)">ID Paciente</th>
+                        <th onclick="sortTable(1)">Nombre Paciente</th>
+                        <th onclick="sortTable(2)">Fecha</th>
+                        <th onclick="sortTable(3)">Tipo de Imagen</th>
+                        <th>Notas</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+       
+        const patientData = [
+            {id: "001", name: "Juan Pérez", date: "2024-09-15", type: "Radiografía", notes: "Examen de rutina"},
+            {id: "002", name: "María López", date: "2024-09-16", type: "Resonancia Magnética", notes: "Seguimiento de tratamiento"},
+            {id: "003", name: "Carlos Rodríguez", date: "2024-09-17", type: "Tomografía Computarizada", notes: "Evaluación de lesión"},
+            {id: "004", name: "Ana Martínez", date: "2024-09-18", type: "Ecografía", notes: "Control prenatal"},
+            {id: "005", name: "Luis Sánchez", date: "2024-09-19", type: "Radiografía", notes: "Fractura sospechosa"},
+            {id: "006", name: "Elena Gómez", date: "2024-09-20", type: "Resonancia Magnética", notes: "Lesión en rodilla"},
+            {id: "007", name: "Pedro Fernández", date: "2024-09-21", type: "Tomografía Computarizada", notes: "Seguimiento oncológico"},
+            {id: "008", name: "Laura Torres", date: "2024-09-22", type: "Mamografía", notes: "Examen preventivo"},
+            {id: "009", name: "Miguel Álvarez", date: "2024-09-23", type: "Radiografía", notes: "Dolor en columna"},
+            {id: "010", name: "Carmen Ruiz", date: "2024-09-24", type: "Ecografía", notes: "Revisión abdominal"},
+            {id: "011", name: "Jorge Morales", date: "2024-09-25", type: "Resonancia Magnética", notes: "Lesión en hombro"},
+            {id: "012", name: "Sofía Herrera", date: "2024-09-26", type: "Tomografía Computarizada", notes: "Estudio cerebral"},
+            {id: "013", name: "Roberto Díaz", date: "2024-09-27", type: "Radiografía", notes: "Control post-operatorio"},
+            {id: "014", name: "Isabel Castro", date: "2024-09-28", type: "Ecografía", notes: "Evaluación tiroides"},
+            {id: "015", name: "Fernando Ortiz", date: "2024-09-29", type: "Resonancia Magnética", notes: "Dolor lumbar crónico"},
+            {id: "016", name: "Lucía Vargas", date: "2024-09-30", type: "Mamografía", notes: "Control anual"},
+            {id: "017", name: "Andrés Mendoza", date: "2024-10-01", type: "Tomografía Computarizada", notes: "Evaluación pulmonar"},
+            {id: "018", name: "Patricia Ramos", date: "2024-10-02", type: "Radiografía", notes: "Dolor en muñeca"},
+            {id: "019", name: "Javier Luna", date: "2024-10-03", type: "Resonancia Magnética", notes: "Lesión en tobillo"},
+            {id: "020", name: "Gabriela Soto", date: "2024-10-04", type: "Ecografía", notes: "Evaluación renal"}
+        ];
+
+        function populateTable(data) {
+            const tableBody = document.querySelector("#patient-table tbody");
+            tableBody.innerHTML = "";
+            data.forEach(patient => {
+                const row = `<tr>
+                    <td>${patient.id}</td>
+                    <td>${patient.name}</td>
+                    <td>${patient.date}</td>
+                    <td>${patient.type}</td>
+                    <td>${patient.notes}</td>
+                </tr>`;
+                tableBody.innerHTML += row;
+            });
+        }
+
+        function sortTable(n) {
+            const table = document.getElementById("patient-table");
+            let rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+            switching = true;
+            dir = "asc";
+            while (switching) {
+                switching = false;
+                rows = table.rows;
+                for (i = 1; i < (rows.length - 1); i++) {
+                    shouldSwitch = false;
+                    x = rows[i].getElementsByTagName("TD")[n];
+                    y = rows[i + 1].getElementsByTagName("TD")[n];
+                    if (dir == "asc") {
+                        if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+                            shouldSwitch = true;
+                            break;
+                        }
+                    } else if (dir == "desc") {
+                        if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+                            shouldSwitch = true;
+                            break;
+                        }
+                    }
+                }
+                if (shouldSwitch) {
+                    rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+                    switching = true;
+                    switchcount ++;
+                } else {
+                    if (switchcount == 0 && dir == "asc") {
+                        dir = "desc";
+                        switching = true;
+                    }
+                }
+            }
+        }
+
+        function searchImages() {
+            const imageType = document.getElementById("image-type").value;
+            const startDate = document.getElementById("start-date").value;
+            const endDate = document.getElementById("end-date").value;
+
+            const filteredData = patientData.filter(patient => {
+                return (!imageType || patient.type === imageType) &&
+                       (!startDate || patient.date >= startDate) &&
+                       (!endDate || patient.date <= endDate);
+            });
+
+            const resultsDiv = document.getElementById("search-results");
+            resultsDiv.innerHTML = `<h3>Resultados de la búsqueda</h3>`;
+            if (filteredData.length > 0) {
+                const table = document.createElement("table");
+                table.innerHTML = `
+                    <tr>
+                        <th>ID Paciente</th>
+                        <th>Nombre Paciente</th>
+                        <th>Fecha</th>
+                        <th>Tipo de Imagen</th>
+                        <th>Notas</th>
+                    </tr>
+                `;
+                filteredData.forEach(patient => {
+                    table.innerHTML += `
+                        <tr>
+                            <td>${patient.id}</td>
+                            <td>${patient.name}</td>
+                            <td>${patient.date}</td>
+                            <td>${patient.type}</td>
+                            <td>${patient.notes}</td>
+                        </tr>
+                    `;
+                });
+                resultsDiv.appendChild(table);
+            } else {
+                resultsDiv.innerHTML += "<p>No se encontraron resultados.</p>";
+            }
+        }
+
+        document.getElementById('login').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const userId = document.getElementById('user-id').value;
+            if (userId === 'admin123') {
+                document.getElementById('login-form').style.display = 'none';
+                document.getElementById('content').style.display = 'block';
+                populateTable(patientData);
+            } else {
+                alert('ID de usuario incorrecto. Intente de nuevo.');
+            }
+        });
+
+        document.getElementById('search-btn').addEventListener('click', searchImages);
+
+        window.onload = function() {
+            populateTable(patientData);
+        };
+    </script>
+</body>
+</html>
